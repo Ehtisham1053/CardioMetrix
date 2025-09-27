@@ -1,6 +1,6 @@
 # CardioMetrix
 
-**Calibrated XGBoost screening for Diabetes & Hypertension** — with fairness checks, SHAP explainability, and a polished Flask + Bootstrap dashboard.
+**Calibrated XGBoost screening for Diabetes & Hypertension** — with fairness checks and a polished Flask + Bootstrap dashboard.
 
 ![CardioMetrix Dashboard](cardiometrix/assests/dashboard.png)
 
@@ -9,28 +9,6 @@
 
 ---
 
-## Table of Contents
-
-- [Motivation](#motivation)
-- [Features](#features)
-- [Live Demo Screenshots](#live-demo-screenshots)
-- [Project Structure](#project-structure)
-- [Quickstart](#quickstart)
-- [Data Sources & Harmonization](#data-sources--harmonization)
-- [Label Policy](#label-policy)
-- [Modeling Choices](#modeling-choices)
-- [Training & Evaluation](#training--evaluation)
-- [Fairness & Responsible AI](#fairness--responsible-ai)
-- [Explainability (SHAP)](#explainability-shap)
-- [API (Flask)](#api-flask)
-- [UI (Bootstrap + Chartjs)](#ui-bootstrap--chartjs)
-- [Reproducibility](#reproducibility)
-- [Roadmap](#roadmap)
-- [FAQ](#faq)
-- [License](#license)
-- [Acknowledgments](#acknowledgments)
-
----
 
 ## Motivation
 
@@ -113,3 +91,128 @@ cardiometrix/
 │  ├─ prod_thresholds.json
 │  └─ feature_spec_per_target.joblib
 └─ README.md
+
+
+
+# 📊 Health Risk Prediction Models
+
+## Data Sources & Harmonization
+
+### Sources (de-identified public tabular)
+- **Pima Indians Diabetes (Pima)** → `diabetes.csv`  
+- **UCI Heart Disease (Heart)** → `heart.csv`  
+- **Chronic Kidney Disease (CKD)** → `ckd.csv`
+
+### Harmonization Pipeline
+- Map raw fields into a unified schema: `age`, `sex`, `bmi`, `sbp`, `dbp`, `tc`, ...  
+- Keep dataset-specific attributes under `extra__*`  
+  - e.g., `extra__pregnancies`, `extra__diabetespedigreefunction`, `extra__htn`  
+- Apply conservative physiological bounds (**out-of-range → NaN**).  
+- Add numeric missingness indicators for auditability.  
+- Persist a single table: `data/processed/harmonized.csv`.  
+
+⚠️ Note: Some features (e.g., **HDL/LDL/TG/HbA1c/eGFR**) are **100% missing** in these public datasets, but remain in the schema for future compatibility. They are **not used** by the current models.
+
+---
+
+## Label Policy
+📄 Documented in `docs/LABEL_POLICY.md`. Summary:
+
+### Diabetes (`label_diabetes`)
+- **1 if any of:**
+  - HbA1c ≥ 6.5  
+  - Fasting_glucose ≥ 126  
+  - Dataset diagnosis flag  
+- We **explicitly do not use fasting glucose as a feature** for the diabetes model (to avoid leakage).
+
+### Hypertension (`label_hypertension`)
+- **1 if any of:**
+  - SBP ≥ 140  
+  - DBP ≥ 90  
+  - CKD htn flag  
+
+### ASCVD Proxy
+- Lightweight educational risk proxy from **age / sbp / tc / hdl**  
+- *(not a clinical calculator)*
+
+---
+
+## Data Splits
+- **70/15/15 (train/val/test)**, stratified by joint label (`"00","01","10","11"`)  
+- Indices persisted to `indices/`
+
+---
+
+## Modeling Choices
+- **Tabular-first** → XGBoost primary (tree ensembles handle missingness well).  
+- **Baseline** → Logistic Regression for transparent reference.  
+- **Leakage-aware** → Diabetes model excludes fasting glucose & label-like columns.  
+- **Calibration** → Isotonic regression on validation outputs.  
+- **Thresholds** → Validation F1 maximisation:  
+  - Diabetes: **0.20**  
+  - Hypertension: **0.35**  
+
+📉 Tradeoffs:  
+- Lower thresholds ↑ recall ↓ precision.  
+- Adjustable in `registry/prod_thresholds.json`.
+
+### Artifacts Saved in `registry/`
+- `prod_preprocessor__{diabetes,hypertension}.joblib`  
+- `prod_xgb__{diabetes,hypertension}.joblib`  
+- `prod_calibrator__{diabetes,hypertension}.joblib`  
+- `prod_thresholds.json`  
+- `feature_spec_per_target.joblib`  
+
+---
+
+## Training & Evaluation
+
+### Chosen Thresholds (Validation)
+- **Diabetes** → 0.20 (F1 ≈ 0.688)  
+- **Hypertension** → 0.35 (F1 ≈ 0.804)  
+
+### Test Metrics
+#### Diabetes (risk-factor model; glucose excluded)
+- Accuracy: **0.679**  
+- Positive-class F1: **0.660**  
+- Precision: **0.535**  
+- Recall: **0.863**  
+- *Screening-leaning: higher recall by design.*
+
+#### Hypertension
+- Accuracy: **0.905**  
+- Positive-class F1: **0.774**  
+- Precision: **0.750**  
+- Recall: **0.800**  
+- *Signal primarily driven by SBP/DBP + age.*
+
+⚠️ **OOD Note**: Datasets are adult populations; pediatric inputs are out-of-distribution.
+
+---
+
+## Fairness & Responsible AI
+
+### Slices
+- Evaluate precision/recall/F1 by:  
+  - **Sex** → (F / M / Unknown)  
+  - **Age bands** → (≤30, 31–45, 46–60, 60+)  
+
+### Policy
+- Optional **per-sex thresholds** for diabetes with a recall floor.  
+- Falls back to the **global threshold** for small slices.  
+
+### Governance
+- Ethics/guardrails captured in `docs/PRD.md`.  
+- Reinforced in UI disclaimer.  
+
+⚠️ **Important**:  
+In production deployments, always pair these models with **clinical oversight** and **local policy review**.
+
+
+
+
+
+
+
+
+
