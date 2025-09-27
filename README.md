@@ -59,6 +59,7 @@ Suggested test inputs for those screenshots:
 ## Project Structure
 
 ```text
+.venv/                     # Python virtual environment
 cardiometrix/
 ├─ app/
 │  ├─ app_flask.py           # Flask server (API + dashboard routes)
@@ -90,7 +91,8 @@ cardiometrix/
 │  ├─ prod_calibrator__{diabetes,hypertension}.joblib
 │  ├─ prod_thresholds.json
 │  └─ feature_spec_per_target.joblib
-└─ README.md
+cardiometrix.ipynb         # Training notebook (Week 1–2)
+README.md
 ```
 ---
 
