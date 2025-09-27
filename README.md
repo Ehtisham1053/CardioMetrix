@@ -2,7 +2,7 @@
 
 **Calibrated XGBoost screening for Diabetes & Hypertension** — with fairness checks, SHAP explainability, and a polished Flask + Bootstrap dashboard.
 
-![CardioMetrix Dashboard](assets/dashboard.png)
+![CardioMetrix Dashboard](cardiometrix/assests/dashboard.png)
 
 > **Disclaimer**  
 > This project is for **educational decision support** only. It is **not** a medical device and **not** a diagnosis. Always use clinical judgment and confirm with appropriate tests.
@@ -62,18 +62,14 @@ This repo is resume-ready and production-minded: data is harmonized, labels are 
 ## Live Demo Screenshots
 
 **Dashboard**  
-![Dashboard](assets/dashboard.png)
+![Dashboard](cardiometrix/assests/dashboard.png)
 
 **Male example (expected low risk)**  
-![Prediction — Male](assets/example_male.png)
+![Prediction — Male](cardiometrix/assests/male_prediction.png)
 
 **Female example (expected higher risk)**  
-![Prediction — Female](assets/example_female.png)
+![Prediction — Female](cardiometrix/assests/female_prediction.png)
 
-> Put your actual screenshots at:
-> - `assets/dashboard.png`
-> - `assets/example_male.png`
-> - `assets/example_female.png`
 
 Suggested test inputs for those screenshots:
 
