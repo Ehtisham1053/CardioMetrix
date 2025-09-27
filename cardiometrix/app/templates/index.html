@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-4">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Input</h5>
+        <form id="predict-form" class="vstack gap-3">
+          <div class="row g-2">
+            <div class="col">
+              <label class="form-label">Age (years)</label>
+              <input type="number" step="1" min="0" max="120" class="form-control" name="age" required>
+            </div>
+            <div class="col">
+              <label class="form-label">Sex</label>
+              <select class="form-select" name="sex">
+                <option value="">Unknown</option>
+                <option value="F">Female</option>
+                <option value="M">Male</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row g-2">
+            <div class="col">
+              <label class="form-label">BMI</label>
+              <input type="number" step="0.1" min="10" max="60" class="form-control" name="bmi">
+            </div>
+            <div class="col">
+              <label class="form-label">SBP (mmHg)</label>
+              <input type="number" step="1" min="70" max="250" class="form-control" name="sbp">
+            </div>
+            <div class="col">
+              <label class="form-label">DBP (mmHg)</label>
+              <input type="number" step="1" min="40" max="150" class="form-control" name="dbp">
+            </div>
+          </div>
+
+          <div class="row g-2">
+            <div class="col">
+              <label class="form-label">Pregnancies (Pima)</label>
+              <input type="number" step="1" min="0" max="20" class="form-control" name="extra__pregnancies">
+            </div>
+            <div class="col">
+              <label class="form-label">Pedigree (Pima)</label>
+              <input type="number" step="0.001" min="0" max="3" class="form-control" name="extra__diabetespedigreefunction">
+            </div>
+          </div>
+
+          <button class="btn btn-primary mt-2" type="submit">Predict</button>
+          <div id="form-hint" class="form-text">
+            Age is required. Other fields are optional (imputed if missing).
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-8">
+    <div id="results" class="d-none">
+      <div class="row g-3">
+        <!-- Diabetes card -->
+        <div class="col-md-6">
+          <div class="card result-card shadow-sm">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">Diabetes</h6>
+                <span id="d-decision" class="badge text-bg-secondary">—</span>
+              </div>
+              <div class="chart-wrap my-3">
+                <canvas id="d-chart"></canvas>
+              </div>
+              <div class="small text-muted">
+                Prob: <span id="d-prob">—</span> · Thr: <span id="d-thr">—</span>
+              </div>
+              <hr>
+              <div>
+                <div class="small fw-semibold mb-1">Top factors</div>
+                <div id="d-factors" class="factor-list"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hypertension card -->
+        <div class="col-md-6">
+          <div class="card result-card shadow-sm">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">Hypertension</h6>
+                <span id="h-decision" class="badge text-bg-secondary">—</span>
+              </div>
+              <div class="chart-wrap my-3">
+                <canvas id="h-chart"></canvas>
+              </div>
+              <div class="small text-muted">
+                Prob: <span id="h-prob">—</span> · Thr: <span id="h-thr">—</span>
+              </div>
+              <hr>
+              <div>
+                <div class="small fw-semibold mb-1">Top factors</div>
+                <div id="h-factors" class="factor-list"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="alert alert-secondary mt-3 small" id="disclaimer">—</div>
+    </div>
+
+    <div id="empty-state" class="empty-state text-muted">
+      Enter values and click Predict to see calibrated risks and decisions.
+    </div>
+  </div>
+</div>
+{% endblock %}

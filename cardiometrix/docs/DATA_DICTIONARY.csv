@@ -1,0 +1,13 @@
+column,type,units,allowed_range,missing_policy,notes
+age,float,years,0-120,impute_median,
+sex,category,,{M,F,NaN},impute_mode,one-hot later
+bmi,float,kg/m^2,10-60,impute_median,compute later if height/weight present
+sbp,float,mmHg,70-250,impute_median,
+dbp,float,mmHg,40-150,impute_median,
+tc,float,mg/dL,80-400,impute_median,optional
+fasting_glucose,float,mg/dL,50-400,impute_median,NOT used by diabetes model (avoid leakage)
+extra__pregnancies,float,count,0-20,impute_median,Pima only
+extra__diabetespedigreefunction,float,score,0-3,impute_median,Pima only
+source_dataset,category,,{pima_diabetes,uci_heart,uci_ckd},required,provenance
+label_diabetes,int,,{0,1},derived,threshold policy documented
+label_hypertension,int,,{0,1},derived,threshold policy documented

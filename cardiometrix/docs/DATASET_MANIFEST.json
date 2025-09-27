@@ -1,0 +1,41 @@
+{
+  "sources": [
+    {
+      "slug": "uciml/pima-indians-diabetes-database",
+      "raw_file_expected": "diabetes.csv",
+      "mapping_hints": {
+        "Age": "age",
+        "BMI": "bmi",
+        "BloodPressure": "dbp",
+        "Glucose": "fasting_glucose",
+        "Pregnancies": "extra__pregnancies",
+        "DiabetesPedigreeFunction": "extra__diabetespedigreefunction",
+        "Outcome": "diag_flag_diabetes"
+      }
+    },
+    {
+      "slug": "mragpavank/heart-diseaseuci",
+      "raw_file_expected": "heart.csv",
+      "mapping_hints": {
+        "age": "age",
+        "sex": "sex (0=F,1=M \u2192 map to F/M)",
+        "trestbps": "sbp",
+        "chol": "tc",
+        "target|num": "heart_label_raw"
+      }
+    },
+    {
+      "slug": "mansoordaku/ckdisease",
+      "raw_file_expected": "ckd.csv",
+      "mapping_hints": {
+        "age": "age",
+        "bp": "sbp (note: may be mean BP; document assumption)",
+        "bgr": "fasting_glucose (random proxy)",
+        "sc": "extra__sc",
+        "htn": "extra__htn (yes/no)",
+        "dm": "extra__dm (yes/no)",
+        "classification": "ckd_raw (ckd/notckd)"
+      }
+    }
+  ]
+}
