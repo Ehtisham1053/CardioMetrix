@@ -91,8 +91,8 @@ cardiometrix/
 │  ├─ prod_calibrator__{diabetes,hypertension}.joblib
 │  ├─ prod_thresholds.json
 │  └─ feature_spec_per_target.joblib
-cardiometrix.ipynb         # Training notebook (Week 1–2)
-README.md
+├─ requirements.txt
+├─ README.md
 ```
 ---
 
