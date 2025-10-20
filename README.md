@@ -40,13 +40,13 @@ This repo is resume-ready and production-minded: data is harmonized, labels are 
 ## Live Demo Screenshots
 
 **Dashboard**  
-![Dashboard](cardiometrix/assests/dashboard.png)
+![Dashboard](assests/dashboard.png)
 
 **Male example (expected low risk)**  
-![Prediction — Male](cardiometrix/assests/male_prediction.png)
+![Prediction — Male](assests/male_prediction.png)
 
 **Female example (expected higher risk)**  
-![Prediction — Female](cardiometrix/assests/female_prediction.png)
+![Prediction — Female](assests/female_prediction.png)
 
 
 Suggested test inputs for those screenshots:
