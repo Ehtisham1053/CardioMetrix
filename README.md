@@ -2,7 +2,7 @@
 
 **Calibrated XGBoost screening for Diabetes & Hypertension** — with fairness checks and a polished Flask + Bootstrap dashboard.
 
-![CardioMetrix Dashboard](cardiometrix/assests/dashboard.png)
+![CardioMetrix Dashboard](assests/dashboard.png)
 
 > **Disclaimer**  
 > This project is for **educational decision support** only. It is **not** a medical device and **not** a diagnosis. Always use clinical judgment and confirm with appropriate tests.
